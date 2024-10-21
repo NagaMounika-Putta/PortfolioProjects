@@ -110,7 +110,7 @@ Select * ,(RollingPeopleVaccinated/Population)*100 from PopVsVac
 
 
 ----TEMP TABLE
-
+DROP TABLE IF EXISTS #PercentPopulationVaccinated
 CREATE TABLE #PercentPopulationVaccinated
 (
 continent nvarchar(255),
@@ -121,8 +121,8 @@ new_vaccinations numeric,
 RollingPeopleVaccinated numeric
 )
 
-INSERT INTO #PercentPopulationVaccinated (continent, location, date, population, new_vaccinations, RollingPeopleVaccinated) 
-Select dea.continent,dea.location,dea.date,dea.population, dea.total_cases ,vac.new_vaccinations
+INSERT INTO #PercentPopulationVaccinated 
+Select dea.continent,dea.location,dea.date,dea.population ,vac.new_vaccinations
 ,SUM(convert(bigint,vac.new_vaccinations)) over (partition by dea.location order by dea.location, dea.date ROWS UNBOUNDED PRECEDING)
 as RollingPeopleVaccinated
 from CovidDeaths dea
